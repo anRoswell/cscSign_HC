@@ -1,0 +1,12 @@
+C:\firmarPdf\consolePdf.exe
+C:\firmarPdf\consolePdf.dll
+C:\firmarPdf\consolePdf.deps.json
+C:\firmarPdf\consolePdf.runtimeconfig.json
+C:\firmarPdf\consolePdf.pdb
+C:\firmarPdf\BouncyCastle.Crypto.dll
+C:\firmarPdf\itextsharp.dll
+C:\firmarPdf\Microsoft.Win32.SystemEvents.dll
+C:\firmarPdf\System.Drawing.Common.dll
+C:\firmarPdf\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\firmarPdf\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\firmarPdf\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
