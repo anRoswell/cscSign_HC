@@ -6,6 +6,7 @@ using iTextSharp.text.pdf;
 using Microsoft.Extensions.Configuration;
 
 public class CTextSharp{
+    //Objeto para leer el pdf original
     static PdfReader oReader = null;
     //Objeto que tiene el tamaño de nuestro documento
     static Rectangle oSize = null;
@@ -22,14 +23,13 @@ public class CTextSharp{
     string pathPDF = string.Empty;
     string pathPDF2 = string.Empty;
 
-    //Variables de validacion
-    string[] firmas;
-
-
     string dirPruebas = string.Empty;
     string ficPruebas = string.Empty;
 
-    public CTextSharp(){
+    public CTextSharp(string pathPDF, string pathPDF2){
+        this.pathPDF = pathPDF;
+        this.pathPDF2 = pathPDF2;
+
         IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appSettings.json", true,true);
@@ -49,13 +49,11 @@ public class CTextSharp{
         string dirPruebas = @"E:\Pruebas3\RSA cripto";
         string ficPruebas = Path.Combine(dirPruebas, "MisClaves_CS.xml");
     }
-
-   // Obtenemos nombres de firmantes para manejo personaliado de erroes
     
 
-    public bool Firmar(string opcion, string[] firmasSearch){
+    public bool Firmar(Firma sign, int[] signWidth){
         //Objeto para leer el pdf original
-        oReader = new PdfReader(pathPDF);
+        oReader = new PdfReader(this.pathPDF);
 
         //Objeto que tiene el tamaño de nuestro documento
         oSize = oReader.GetPageSizeWithRotation(1);
@@ -65,64 +63,15 @@ public class CTextSharp{
 
         try
         {
-            FileStream oFS = new FileStream(pathPDF2, FileMode.Create, FileAccess.Write);
+            FileStream oFS = new FileStream(this.pathPDF2, FileMode.Create, FileAccess.Write);
             PdfWriter oWriter = PdfWriter.GetInstance(oDocument, oFS);
             oDocument.Open();
 
-            switch (opcion)
-            {
-                case "1":
-                    firmas[0] = firmasSearch[4];
-                    firmas[1] = firmasSearch[3];
-                    firmas[2] = firmasSearch[6];
-                    firmas[3] = firmasSearch[1];
-                    break;
-                case "2":
-                    firmas[0] = firmasSearch[4];
-                    firmas[1] = firmasSearch[3];
-                    firmas[2] = firmasSearch[2];
-                    firmas[3] = firmasSearch[1];
-                    break;
-                case "3":
-                    firmas[0] = firmasSearch[5];
-                    firmas[1] = firmasSearch[6];
-                    firmas[2] = firmasSearch[2];
-                    firmas[3] = firmasSearch[1];
-                    break;
-                default:
-                    Console.WriteLine("Opción inexistente");
-                    break;
-            }
-
             // Creamos la imagen y le ajustamos el tamaño
-            iTextSharp.text.Image imagen1 = CreateImagenToPdf(firmas[1], 415);
-            iTextSharp.text.Image imagen2 = CreateImagenToPdf(firmas[2], 375);
-            iTextSharp.text.Image imagen3 = CreateImagenToPdf(firmas[3], 340);
-            iTextSharp.text.Image imagen4 = CreateImagenToPdf(firmas[4], 295);
-
-            // iTextSharp.text.Image imagen1 = iTextSharp.text.Image.GetInstance(firmas[1]);
-            // imagen1.BorderWidth = 0;
-            // imagen1.SetAbsolutePosition(xAbsolutePosition, 415);
-            // imagen1.ScaleAbsoluteWidth(sWidth);
-            // imagen1.ScaleAbsoluteHeight(sHeight);
-
-            // iTextSharp.text.Image imagen2 = iTextSharp.text.Image.GetInstance(firmas[2]);
-            // imagen2.BorderWidth = 0;
-            // imagen2.SetAbsolutePosition(xAbsolutePosition, 375);
-            // imagen2.ScaleAbsoluteWidth(sWidth);
-            // imagen2.ScaleAbsoluteHeight(sHeight);
-
-            // iTextSharp.text.Image imagen3 = iTextSharp.text.Image.GetInstance(firmas[3]);
-            // imagen3.BorderWidth = 0;
-            // imagen3.SetAbsolutePosition(xAbsolutePosition, 340);
-            // imagen3.ScaleAbsoluteWidth(sWidth);
-            // imagen3.ScaleAbsoluteHeight(sHeight);
-
-            // iTextSharp.text.Image imagen4 = iTextSharp.text.Image.GetInstance(firmas[4]);
-            // imagen4.BorderWidth = 0;
-            // imagen4.SetAbsolutePosition(xAbsolutePosition, 295);
-            // imagen4.ScaleAbsoluteWidth(sWidth);
-            // imagen4.ScaleAbsoluteHeight(sHeight);
+            iTextSharp.text.Image imagen1 = CreateImagenToPdf(sign.Sign[0], signWidth[0]);
+            iTextSharp.text.Image imagen2 = CreateImagenToPdf(sign.Sign[1], signWidth[1]);
+            iTextSharp.text.Image imagen3 = CreateImagenToPdf(sign.Sign[2], signWidth[2]);
+            iTextSharp.text.Image imagen4 = CreateImagenToPdf(sign.Sign[3], signWidth[3]);
 
             //El contenido del pdf, aqui se hace la escritura del contenido
             PdfContentByte oPDF = oWriter.DirectContent;
@@ -140,8 +89,9 @@ public class CTextSharp{
             oDocument.Add(imagen2);
             oDocument.Add(imagen3);
             oDocument.Add(imagen4);
+
             oDocument.Close();
-            
+
             oFS.Close();
             oWriter.Close();
             oReader.Close();
@@ -150,9 +100,7 @@ public class CTextSharp{
             Console.WriteLine("                               *** Firmado satisfactoriamente !!!!! ***");
             Console.WriteLine("                            *** presione cualquier tecla para terminar *** ");
             Console.ReadLine();
-            /*proc.StartInfo.FileName = pathPDF2;
-            proc.Start();
-            proc.Close();*/
+
             return true;
         }
         catch (FileNotFoundException e)

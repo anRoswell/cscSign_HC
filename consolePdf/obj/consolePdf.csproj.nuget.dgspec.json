@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC\\consolePdf\\consolePdf.csproj": {}
+    "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj": {}
   },
   "projects": {
-    "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC\\consolePdf\\consolePdf.csproj": {
+    "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC\\consolePdf\\consolePdf.csproj",
+        "projectUniqueName": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj",
         "projectName": "consolePdf",
-        "projectPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC\\consolePdf\\consolePdf.csproj",
+        "projectPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj",
         "packagesPath": "C:\\Users\\alnavarro\\.nuget\\packages\\",
-        "outputPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC\\consolePdf\\obj\\",
+        "outputPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

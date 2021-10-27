@@ -84,3 +84,46 @@ D:\Documentos\Visual Studio 2017\Projects\FirmasCSC\consolePdf\obj\Debug\netcore
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.dll
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.pdb
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.genruntimeconfig.cache
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.exe
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.deps.json
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.runtimeconfig.json
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.runtimeconfig.dev.json
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\consolePdf.pdb
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\itextsharp.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.EnvironmentVariables.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.FileExtensions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Json.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileProviders.Abstractions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileProviders.Physical.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileSystemGlobbing.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Security.AccessControl.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Security.Permissions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Security.Principal.Windows.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\System.Windows.Extensions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.csproj.AssemblyReference.cache
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.AssemblyInfoInputs.cache
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.AssemblyInfo.cs
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.csproj.CoreCompileInputs.cache
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.dll
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.pdb
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.genruntimeconfig.cache
