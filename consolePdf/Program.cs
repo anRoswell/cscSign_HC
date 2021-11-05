@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace consolePdf
 {
@@ -21,28 +22,31 @@ namespace consolePdf
         static string pathPDF2 = string.Empty;
         static string GetUrlApiRestWebConfig = string.Empty;
         static string appName  = string.Empty;
+        static string sede  = string.Empty;
         static string profesionalesXX  = string.Empty;
+        static string _path = "json\\profesionales.json";
+        static List<Profesional> profesionales = new List<Profesional>();
 
         static void Main(string[] args)
         {
-            //Console.Clear();
             init();
+
+            string profesionalesString = GetProfesionalesJsonFromFile();
+            profesionales = DeserializeJson(profesionalesString);
 
             ValidacionArchivos(pathPDF, msg1, complemento);
             sign = new Firma();
             sign.Sign = new String[4];
 
-            GetSignFromDB();
-
             Validaciones();
 
-            //string opcion = showMenu();
-            string opcion = "3";
+            string opcion = showMenu();
+            //string opcion = "3";
             GetSignsSelected(opcion);
 
             // Evalua que exista la plantilla PDF
             CTextSharp cTextSharp = new CTextSharp(pathPDF, pathPDF2);
-            cTextSharp.Firmar(sign, signWidth);
+            cTextSharp.Firmar(profesionales, Convert.ToInt32(opcion)-1);
         }
 
         static void init(){
@@ -52,9 +56,9 @@ namespace consolePdf
 
             IConfigurationRoot config = builder.Build();
             appName = config["ConnectionString"];
-            var profesionales = config.GetValue<Profesionales>("Profesionales");
+            sede = config["Sede"];
+            //var profesionales = config.GetValue<>("Profesionales");
             IConfigurationSection pdf = config.GetSection(nameof(Pdf));
-            
 
             GetUrlApiRestWebConfig = ConfigurationManager.AppSettings["MySetting"];
 
@@ -72,12 +76,14 @@ namespace consolePdf
             ValidacionArchivos(signPath[4], msg2, Reversar(signPath[4]));
             ValidacionArchivos(signPath[5], msg2, Reversar(signPath[5]));
         }
+        
         static string showMenu(){
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("                             ┌──────────────────────────────────────┐");
+            Console.WriteLine("                             │          REGIONAL BOLIVAR            │");
             Console.WriteLine("                             │  Sistema para firmas de actas de     │");
             Console.WriteLine("                             │ juntas de profesionales de la salud  │");
             Console.WriteLine("                             │          MIPRES NO PBSUPC            │");
@@ -85,11 +91,17 @@ namespace consolePdf
             Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
             Console.WriteLine("                    │     JUNTAS     │  │  I N T E G R A N T E S  J U N T A S  │");
             Console.WriteLine("                    ├────────────────┤  ├──────────────────────────────────────┤");
-            Console.WriteLine("                    │..1] Junta 1....│  │ Tipon - Miranda - Ospina - Chacón    │");
-            Console.WriteLine("                    │..2] Junta 2....│  │ Tipon - Miranda - Davila - Chacón    │");
-            Console.WriteLine("                    │..3] Junta 3....│  │ Murillo - Ospina - Davila - Chacón   │");
+            int cont = 0;
+            foreach (var item in profesionales)
+            {
+                Console.WriteLine("                    │..{0}] Junta 2....│  │ {1}                        │", ++cont, item.nombre);
+            }
+            // Console.WriteLine("                    │..2] Junta 2....│  │ MIGUEL GARCIA                        │");
+            // Console.WriteLine("                    │..1] Junta 1....│  │ RAFAEL GARCIA                        │");
+            // Console.WriteLine("                    │..3] Junta 3....│  │ MANUEL VÁSQUEZ IGLESIA               │");
+            // Console.WriteLine("                    │..4] Junta 3....│  │ JAVIER GARCIA                        │");
             Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
-            Console.WriteLine("");
+            Console.WriteLine("                                                                                ");
             Console.WriteLine("                      Digite una opción entre 1 y 3... pulse 0 para terminar");
         
             string opcion = "";
@@ -123,8 +135,8 @@ namespace consolePdf
             if (!File.Exists(file))
             {
                 Console.WriteLine(msgErr1+complemen);
-                Console.WriteLine("revisar que exista este elemento "+complemen);
-                Console.WriteLine("pulsar cualquier tecla para salir. ");
+                Console.WriteLine("Revisar que exista este elemento "+complemen);
+                Console.WriteLine("Pulsar cualquier tecla para salir. ");
                 Console.ReadLine();
                 Salir();
                 Environment.Exit(1);
@@ -158,6 +170,7 @@ namespace consolePdf
         }
 
         static void GetSignsSelected(string opcion){
+            
             switch (opcion)
             {
                 case "1":
@@ -184,14 +197,9 @@ namespace consolePdf
             }
         }
 
-        static void GetSignFromDB(){
-            //rutas de firmas
-            signPath[0] = @Path.GetFullPath("miembros\\elizabethChacon.png");
-            signPath[1] = @Path.GetFullPath("miembros\\enalbaDavila.png");
-            signPath[2] = @Path.GetFullPath("miembros\\giskarMiranda.png");
-            signPath[3] = @Path.GetFullPath("miembros\\robertoTipon.png");
-            signPath[4] = @Path.GetFullPath("miembros\\danielaMurillo.png");
-            signPath[5] = @Path.GetFullPath("miembros\\sandraOspina.png");
+        static void AddProfesional(Profesional profesional){
+            profesionales.Add(profesional);
+            SaveProfesional(profesionales);
         }
 
         static void Salir()
@@ -222,6 +230,33 @@ namespace consolePdf
             Console.WriteLine("                     **********************************************");
             Console.ReadLine();
         }
+    
+        #region Writing Json
+        static void SaveProfesional(List<Profesional> profesionales){
+            string profesionalJson = JsonConvert.SerializeObject(profesionales);
+            File.WriteAllText(_path, profesionalJson);
+        }
+        #endregion
+
+        #region GetProfesionalesJsonFromFile
+        static string GetProfesionalesJsonFromFile()
+        {
+            string profesionalesJsonFromFile = string.Empty;
+
+            using(var reader = new StreamReader(_path))
+            {
+                profesionalesJsonFromFile = reader.ReadToEnd();
+            }
+
+            return profesionalesJsonFromFile;
+        }
+        #endregion
+
+        #region DeserializeJson
+        static List<Profesional> DeserializeJson(string json){
+            return JsonConvert.DeserializeObject<List<Profesional>>(json);
+        }
+        #endregion
     }
 }
 
@@ -241,10 +276,12 @@ public class Firma{
     public int SignWidth { get; set; }
 }
 
-public class Profesionales{
+public class Profesional{
     public string nombre { get; set; }
     public int xposition { get; set; }
     public int yposition { get; set; }
     public string especialidad { get; set; }
     public string sede { get; set; }
+    public string sign {get; set;}
+    public int SignWidth { get; set; }
 }

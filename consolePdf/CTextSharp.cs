@@ -4,6 +4,7 @@ using System.Configuration;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 public class CTextSharp{
     //Objeto para leer el pdf original
@@ -51,7 +52,7 @@ public class CTextSharp{
     }
     
 
-    public bool Firmar(Firma sign, int[] signWidth){
+    public bool Firmar(List<Profesional> profesionales, int option){
         //Objeto para leer el pdf original
         oReader = new PdfReader(this.pathPDF);
 
@@ -68,10 +69,7 @@ public class CTextSharp{
             oDocument.Open();
 
             // Creamos la imagen y le ajustamos el tamaño
-            iTextSharp.text.Image imagen1 = CreateImagenToPdf(sign.Sign[0], signWidth[0]);
-            iTextSharp.text.Image imagen2 = CreateImagenToPdf(sign.Sign[1], signWidth[1]);
-            iTextSharp.text.Image imagen3 = CreateImagenToPdf(sign.Sign[2], signWidth[2]);
-            iTextSharp.text.Image imagen4 = CreateImagenToPdf(sign.Sign[3], signWidth[3]);
+            iTextSharp.text.Image imagen1 = CreateImagenToPdf(profesionales[option].sign, profesionales[option].SignWidth);
 
             //El contenido del pdf, aqui se hace la escritura del contenido
             PdfContentByte oPDF = oWriter.DirectContent;
@@ -86,9 +84,6 @@ public class CTextSharp{
 
             // Cerramos los objetos utilizados
             oDocument.Add(imagen1);
-            oDocument.Add(imagen2);
-            oDocument.Add(imagen3);
-            oDocument.Add(imagen4);
 
             oDocument.Close();
 

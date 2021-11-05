@@ -127,3 +127,4 @@ D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\net
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.dll
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.pdb
 D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\obj\Debug\netcoreapp3.1\consolePdf.genruntimeconfig.cache
+D:\Documentos\Visual Studio 2017\Projects\FirmasCSC _HC\consolePdf\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
