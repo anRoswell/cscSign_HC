@@ -17,7 +17,6 @@ public class CTextSharp{
     // Declaramos variables globales
     int sWidth;
     int sHeight;
-    int xAbsolutePosition;
     string GetUrlApiRestWebConfig = string.Empty;
 
     //rutas de nuestros pdf
@@ -43,7 +42,6 @@ public class CTextSharp{
         // Dimensiones imágenes
         this.sWidth = Convert.ToInt32(dimensionesImagenes["sWidth"]);
         this.sHeight = Convert.ToInt32(dimensionesImagenes["sHeight"]);
-        this.xAbsolutePosition = Convert.ToInt32(dimensionesImagenes["xAbsolutePosition"]);
 
         string GetUrlApiRestWebConfig = ConfigurationManager.AppSettings["MySetting"];
 
@@ -52,7 +50,7 @@ public class CTextSharp{
     }
     
 
-    public bool Firmar(List<Profesional> profesionales, int option){
+    public bool Firmar(Profesional profesionales){
         //Objeto para leer el pdf original
         oReader = new PdfReader(this.pathPDF);
 
@@ -69,7 +67,7 @@ public class CTextSharp{
             oDocument.Open();
 
             // Creamos la imagen y le ajustamos el tamaño
-            iTextSharp.text.Image imagen1 = CreateImagenToPdf(profesionales[option].sign, profesionales[option].SignWidth);
+            iTextSharp.text.Image imagen1 = CreateImagenToPdf(profesionales.sign, profesionales.xposition, profesionales.yposition);
 
             //El contenido del pdf, aqui se hace la escritura del contenido
             PdfContentByte oPDF = oWriter.DirectContent;
@@ -93,7 +91,7 @@ public class CTextSharp{
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             
             Console.WriteLine("                               *** Firmado satisfactoriamente !!!!! ***");
-            Console.WriteLine("                            *** presione cualquier tecla para terminar *** ");
+            Console.WriteLine("                            *** presione cualquier tecla para continuar *** ");
             Console.ReadLine();
 
             return true;
@@ -118,7 +116,7 @@ public class CTextSharp{
         }
     }
 
-    private iTextSharp.text.Image CreateImagenToPdf(string firma, int yAbsolutePosition, int BorderWidth = 0){
+    private iTextSharp.text.Image CreateImagenToPdf(string firma, int xAbsolutePosition, int yAbsolutePosition, int BorderWidth = 0){
         // Creamos la imagen y le ajustamos el tamaño
         iTextSharp.text.Image imagen = iTextSharp.text.Image.GetInstance(firma);
         imagen.BorderWidth = BorderWidth;

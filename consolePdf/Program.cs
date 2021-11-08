@@ -25,28 +25,36 @@ namespace consolePdf
         static string sede  = string.Empty;
         static string profesionalesXX  = string.Empty;
         static string _path = "json\\profesionales.json";
-        static List<Profesional> profesionales = new List<Profesional>();
+        static Profesional profesionalSeleccionado = new Profesional();
+        static List<Profesional> profesionalesAll= new List<Profesional>();
+        static List<Profesional> profesionalesFilter= new List<Profesional>();
+        static List<IGrouping<string, Profesional>> profesionalesAgrupados = new List<IGrouping<string, Profesional>>();
 
         static void Main(string[] args)
         {
             init();
 
+            // Obtengo todos los profesionales
             string profesionalesString = GetProfesionalesJsonFromFile();
-            profesionales = DeserializeJson(profesionalesString);
+            profesionalesAll = DeserializeJson(profesionalesString);
+
+            // Filtro por sede
+            profesionalesAgrupados = profesionalesAll
+                        .AsEnumerable()
+                        .Where(x => x.sede == sede)
+                        .OrderBy(d => d.especialidad)
+                        .ThenBy(x => x.nombre)
+                        .GroupBy(d => d.especialidad)
+                        .ToList();
+
+            profesionalesFilter = profesionalesAgrupados.SelectMany(group => group).ToList();
 
             ValidacionArchivos(pathPDF, msg1, complemento);
             sign = new Firma();
             sign.Sign = new String[4];
 
-            Validaciones();
-
-            string opcion = showMenu();
-            //string opcion = "3";
-            GetSignsSelected(opcion);
-
-            // Evalua que exista la plantilla PDF
-            CTextSharp cTextSharp = new CTextSharp(pathPDF, pathPDF2);
-            cTextSharp.Firmar(profesionales, Convert.ToInt32(opcion)-1);
+            //Validaciones();
+            showMenuMiddle();
         }
 
         static void init(){
@@ -56,7 +64,10 @@ namespace consolePdf
 
             IConfigurationRoot config = builder.Build();
             appName = config["ConnectionString"];
+
+            //Sede
             sede = config["Sede"];
+
             //var profesionales = config.GetValue<>("Profesionales");
             IConfigurationSection pdf = config.GetSection(nameof(Pdf));
 
@@ -77,6 +88,29 @@ namespace consolePdf
             ValidacionArchivos(signPath[5], msg2, Reversar(signPath[5]));
         }
         
+        static bool showMenuMiddle(){
+            bool resp = false;
+            try
+            {
+                 string opcion = showMenu();
+                //string opcion = "3";
+                Console.WriteLine("La opcion seleccionada es: ", opcion);
+
+                // Evalua que exista la plantilla PDF
+
+                CTextSharp cTextSharp = new CTextSharp(pathPDF, pathPDF2);
+                resp = cTextSharp.Firmar(profesionalSeleccionado);
+                if(resp){
+                    showMenuMiddle();
+                }
+            }
+            catch (System.Exception)
+            {
+                showMenuMiddle();
+            }
+            return resp;
+        }
+
         static string showMenu(){
             Console.WriteLine("");
             Console.WriteLine("");
@@ -88,21 +122,29 @@ namespace consolePdf
             Console.WriteLine("                             │ juntas de profesionales de la salud  │");
             Console.WriteLine("                             │          MIPRES NO PBSUPC            │");
             Console.WriteLine("                             └──────────────────────────────────────┘");
+
+            
             Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
-            Console.WriteLine("                    │     JUNTAS     │  │  I N T E G R A N T E S  J U N T A S  │");
-            Console.WriteLine("                    ├────────────────┤  ├──────────────────────────────────────┤");
-            int cont = 0;
-            foreach (var item in profesionales)
-            {
-                Console.WriteLine("                    │..{0}] Junta 2....│  │ {1}                        │", ++cont, item.nombre);
-            }
-            // Console.WriteLine("                    │..2] Junta 2....│  │ MIGUEL GARCIA                        │");
-            // Console.WriteLine("                    │..1] Junta 1....│  │ RAFAEL GARCIA                        │");
-            // Console.WriteLine("                    │..3] Junta 3....│  │ MANUEL VÁSQUEZ IGLESIA               │");
-            // Console.WriteLine("                    │..4] Junta 3....│  │ JAVIER GARCIA                        │");
+            Console.WriteLine("                    │    OPCIONES    │  │  FIRMA PROFESIONALES REGIONAL CSC    │");
             Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
+            foreach (var profresionalesEspecialidad in profesionalesAgrupados)
+            {
+                Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
+                Console.WriteLine("                    ├  ESPECIALIDAD  ┤  ├  {0}                       ┤", profresionalesEspecialidad.Key);
+                Console.WriteLine("                    ├────────────────┤  ├──────────────────────────────────────┤");
+
+                Console.WriteLine("                    ├ SELECCIONE ID  ┤  ├                                      ┤");
+                Console.WriteLine("                    │                │  │                                      │");
+
+                foreach (var item in profresionalesEspecialidad)
+                {
+                    Console.WriteLine("                    │  {0}]            │  │ {1}                        │", item.id, item.nombre);
+                }
+                Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
+            }
+
             Console.WriteLine("                                                                                ");
-            Console.WriteLine("                      Digite una opción entre 1 y 3... pulse 0 para terminar");
+            Console.WriteLine("                      Seleccione un ID por favor... pulse 0 para terminar");
         
             string opcion = "";
             int sw = 0;
@@ -115,13 +157,17 @@ namespace consolePdf
                     Salir();
                     Environment.Exit(1);
                 }
-                if (opcion != "1" && opcion !="2" && opcion != "3")
+
+                int profesionalSeleccionadoValidar = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).Count();
+                if (profesionalSeleccionadoValidar==0)
                 {
-                    Console.WriteLine("      Digite una opción entre 1 y 3...");
+                    Console.WriteLine("      Seleccione un id valido por favor...");
                     sw = 0;
                 }
                 else
                 {
+                    profesionalSeleccionado = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).First();
+                    profesionalSeleccionado.signPath = @Path.GetFullPath(profesionalSeleccionado.sign);
                     sw = 1;
                 }
             }
@@ -135,7 +181,7 @@ namespace consolePdf
             if (!File.Exists(file))
             {
                 Console.WriteLine(msgErr1+complemen);
-                Console.WriteLine("Revisar que exista este elemento "+complemen);
+                Console.WriteLine("Revisar que exista este elemento " + complemen);
                 Console.WriteLine("Pulsar cualquier tecla para salir. ");
                 Console.ReadLine();
                 Salir();
@@ -169,37 +215,9 @@ namespace consolePdf
             return nombreInv;
         }
 
-        static void GetSignsSelected(string opcion){
-            
-            switch (opcion)
-            {
-                case "1":
-                    sign.Sign[0] = signPath[3];
-                    sign.Sign[1] = signPath[2];
-                    sign.Sign[2] = signPath[5];
-                    sign.Sign[3] = signPath[0];
-                    break;
-                case "2":
-                    sign.Sign[0] = signPath[3];
-                    sign.Sign[1] = signPath[2];
-                    sign.Sign[2] = signPath[1];
-                    sign.Sign[3] = signPath[0];
-                    break;
-                case "3":
-                    sign.Sign[0] = signPath[4];
-                    sign.Sign[1] = signPath[5];
-                    sign.Sign[2] = signPath[1];
-                    sign.Sign[3] = signPath[0];
-                    break;
-                default:
-                    Console.WriteLine("Opción inexistente");
-                    break;
-            }
-        }
-
         static void AddProfesional(Profesional profesional){
-            profesionales.Add(profesional);
-            SaveProfesional(profesionales);
+            profesionalesAll.Add(profesional);
+            SaveProfesional(profesionalesAll);
         }
 
         static void Salir()
@@ -277,11 +295,13 @@ public class Firma{
 }
 
 public class Profesional{
+    public int id { get; set; }
     public string nombre { get; set; }
     public int xposition { get; set; }
     public int yposition { get; set; }
     public string especialidad { get; set; }
     public string sede { get; set; }
     public string sign {get; set;}
+    public string signPath { get; set; }
     public int SignWidth { get; set; }
 }
