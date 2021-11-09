@@ -24,7 +24,8 @@ namespace consolePdf
         static string appName  = string.Empty;
         static string sede  = string.Empty;
         static string profesionalesXX  = string.Empty;
-        static string _path = "json\\profesionales.json";
+        static string _pathProfesionales = "json\\profesionales.json";
+        static string _pathProfesionalesTxt = "json\\profesionales.txt";
         static Profesional profesionalSeleccionado = new Profesional();
         static List<Profesional> profesionalesAll= new List<Profesional>();
         static List<Profesional> profesionalesFilter= new List<Profesional>();
@@ -35,7 +36,15 @@ namespace consolePdf
             init();
 
             // Obtengo todos los profesionales
-            string profesionalesString = GetProfesionalesJsonFromFile();
+            //string profesionalesJson = GetProfesionalesJsonFromFile();
+            string profesionalesTxt = GetProfesionalesTxtFromFile();
+
+            //string profesionalesBase64 = Seguridad.Encriptar(profesionalesJson);
+            //string profesionalesBase64 = Seguridad.Encriptar(profesionalesTxt);
+            //string profesionalesString = Seguridad.DesEncriptar(profesionalesBase64);
+
+
+            string profesionalesString = Seguridad.DesEncriptar(profesionalesTxt);
             profesionalesAll = DeserializeJson(profesionalesString);
 
             // Filtro por sede
@@ -64,6 +73,7 @@ namespace consolePdf
 
             IConfigurationRoot config = builder.Build();
             appName = config["ConnectionString"];
+            //_pathProfesionales = config["_pathProfesionales"];
 
             //Sede
             sede = config["Sede"];
@@ -252,7 +262,7 @@ namespace consolePdf
         #region Writing Json
         static void SaveProfesional(List<Profesional> profesionales){
             string profesionalJson = JsonConvert.SerializeObject(profesionales);
-            File.WriteAllText(_path, profesionalJson);
+            File.WriteAllText(_pathProfesionales, profesionalJson);
         }
         #endregion
 
@@ -261,12 +271,24 @@ namespace consolePdf
         {
             string profesionalesJsonFromFile = string.Empty;
 
-            using(var reader = new StreamReader(_path))
+            using(var reader = new StreamReader(_pathProfesionales))
             {
                 profesionalesJsonFromFile = reader.ReadToEnd();
             }
 
             return profesionalesJsonFromFile;
+        }
+
+        static string GetProfesionalesTxtFromFile()
+        {
+            string profesionalesTxtFromFile = string.Empty;
+
+            using(var reader = new StreamReader(_pathProfesionalesTxt))
+            {
+                profesionalesTxtFromFile = reader.ReadToEnd();
+            }
+
+            return profesionalesTxtFromFile;
         }
         #endregion
 
