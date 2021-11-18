@@ -22,6 +22,7 @@ namespace consolePdf
         static string pathPDF2 = string.Empty;
         static string GetUrlApiRestWebConfig = string.Empty;
         static string appName  = string.Empty;
+        static string SedeDescription  = string.Empty;
         static string sede  = string.Empty;
         static string profesionalesXX  = string.Empty;
         static string _pathProfesionales = "json\\profesionales.json";
@@ -36,15 +37,14 @@ namespace consolePdf
             init();
 
             // Obtengo todos los profesionales
-            //string profesionalesJson = GetProfesionalesJsonFromFile();
-            string profesionalesTxt = GetProfesionalesTxtFromFile();
+            string profesionalesJson = GetProfesionalesJsonFromFile();
+            string profesionalesBase64 = Seguridad.Encriptar(profesionalesJson);
+            string profesionalesString = Seguridad.DesEncriptar(profesionalesBase64);
 
-            //string profesionalesBase64 = Seguridad.Encriptar(profesionalesJson);
+            //string profesionalesTxt = GetProfesionalesTxtFromFile();
             //string profesionalesBase64 = Seguridad.Encriptar(profesionalesTxt);
-            //string profesionalesString = Seguridad.DesEncriptar(profesionalesBase64);
+            //string profesionalesString = Seguridad.DesEncriptar(profesionalesTxt);
 
-
-            string profesionalesString = Seguridad.DesEncriptar(profesionalesTxt);
             profesionalesAll = DeserializeJson(profesionalesString);
 
             // Filtro por sede
@@ -73,6 +73,7 @@ namespace consolePdf
 
             IConfigurationRoot config = builder.Build();
             appName = config["ConnectionString"];
+            SedeDescription = config["SedeDescription"];
             //_pathProfesionales = config["_pathProfesionales"];
 
             //Sede
@@ -127,7 +128,7 @@ namespace consolePdf
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("                             ┌──────────────────────────────────────┐");
-            Console.WriteLine("                             │          REGIONAL BOLIVAR            │");
+            Console.WriteLine("                             │       {0}          │", SedeDescription);
             Console.WriteLine("                             │  Sistema para firmas de actas de     │");
             Console.WriteLine("                             │ juntas de profesionales de la salud  │");
             Console.WriteLine("                             │          MIPRES NO PBSUPC            │");
@@ -142,13 +143,12 @@ namespace consolePdf
                 Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
                 Console.WriteLine("                    ├  ESPECIALIDAD  ┤  ├  {0}                       ┤", profresionalesEspecialidad.Key);
                 Console.WriteLine("                    ├────────────────┤  ├──────────────────────────────────────┤");
-
                 Console.WriteLine("                    ├ SELECCIONE ID  ┤  ├                                      ┤");
                 Console.WriteLine("                    │                │  │                                      │");
 
                 foreach (var item in profresionalesEspecialidad)
                 {
-                    Console.WriteLine("                    │  {0}]            │  │ {1}                        │", item.id, item.nombre);
+                    Console.WriteLine("                    │  {0}]           │  │ {1}                        │", item.id, item.nombre);
                 }
                 Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
             }
