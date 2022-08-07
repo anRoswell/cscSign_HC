@@ -933,11 +933,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj",
+      "projectUniqueName": "D:\\Proyecto csharp\\cscSign_HC\\consolePdf\\consolePdf.csproj",
       "projectName": "consolePdf",
-      "projectPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj",
+      "projectPath": "D:\\Proyecto csharp\\cscSign_HC\\consolePdf\\consolePdf.csproj",
       "packagesPath": "C:\\Users\\alnavarro\\.nuget\\packages\\",
-      "outputPath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\obj\\",
+      "outputPath": "D:\\Proyecto csharp\\cscSign_HC\\consolePdf\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -1016,12 +1016,18 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.1.22, 3.1.22]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.2.21505.57\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   },

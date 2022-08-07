@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3UbD/Q2LkTmIqN23EEYLId4RnS2z9uvo4NrcxTjo5JXdRpE4QFOYuV8LjJi6q68/Pa1GRB4WkKDc9kM8SyyTaQ==",
+  "dgSpecHash": "dQMHe/X5OhudeOXFrOJdBYov704L7hwl/JgxtYofHzFaGnoIYjfITD/T9x63weDNfrtYsnc0ZHpbgPFnsveuNw==",
   "success": true,
-  "projectFilePath": "D:\\Documentos\\Visual Studio 2017\\Projects\\FirmasCSC _HC\\consolePdf\\consolePdf.csproj",
+  "projectFilePath": "D:\\Proyecto csharp\\cscSign_HC\\consolePdf\\consolePdf.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alnavarro\\.nuget\\packages\\bouncycastle\\1.8.6.1\\bouncycastle.1.8.6.1.nupkg.sha512",
     "C:\\Users\\alnavarro\\.nuget\\packages\\itextsharp\\5.5.13.2\\itextsharp.5.5.13.2.nupkg.sha512",
@@ -26,7 +26,8 @@
     "C:\\Users\\alnavarro\\.nuget\\packages\\system.security.permissions\\5.0.0\\system.security.permissions.5.0.0.nupkg.sha512",
     "C:\\Users\\alnavarro\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
     "C:\\Users\\alnavarro\\.nuget\\packages\\system.text.json\\5.0.0\\system.text.json.5.0.0.nupkg.sha512",
-    "C:\\Users\\alnavarro\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512"
+    "C:\\Users\\alnavarro\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512",
+    "C:\\Users\\alnavarro\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.22\\microsoft.netcore.app.host.win-x64.3.1.22.nupkg.sha512"
   ],
   "logs": [
     {
