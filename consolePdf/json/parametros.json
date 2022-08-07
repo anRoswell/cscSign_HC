@@ -1,0 +1,26 @@
+{
+  "MassTransit": {
+    "Host": "rabbitmq://localhost",
+    "Queue": "hildenco"
+  },
+  "ConnectionString": "Server=localhost;Database=hildenco;Uid=<username>;Pwd=<pwd>",
+  "_pathProfesionales": "profesionales.txt",
+  "Smtp": {
+    "Host": "<smtp-server>",
+    "Port": "<smtp-port>",
+    "Username": "<username>",
+    "Password": "<password>",
+    "From": "HildenCo Notification Service"
+  },
+  "Pdf": {
+    "nameJunta": "mipres.pdf",
+    "nameJuntaFirmada": "MIPRESFirmado.pdf"
+  },
+  "Sede": "bolivarNorteCartagena",
+  "SedeDescription": "Bolivar Norte Cartagena",
+  "DimensionesImagenes": {
+    "sWidth": 60,
+    "sHeight": 35,
+    "xAbsolutePosition": 440
+  }
+}
