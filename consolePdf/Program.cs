@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using consolePdf.model;
 
 namespace consolePdf
 {
@@ -17,40 +18,23 @@ namespace consolePdf
         static string complemento = "junta.pdf";
         static Firma sign;
         static string[] signPath = new String[6];
-        static int[] signWidth = {415, 375, 340, 295};
         static string pathPDF = string.Empty;
-        static string pathPDF2 = string.Empty;
-        static string GetUrlApiRestWebConfig = string.Empty;
-        static string appName  = string.Empty;
         static string SedeDescription  = string.Empty;
-        static string sede  = string.Empty;
-        static string profesionalesXX  = string.Empty;
         static string _pathProfesionales = "json\\profesionales.json";
         static string _pathProfesionalesTxt = "json\\profesionales.txt";
+        static Parameter parameter = new Parameter ();
         static Profesional profesionalSeleccionado = new Profesional();
-        static List<Profesional> profesionalesAll= new List<Profesional>();
-        static List<Profesional> profesionalesFilter= new List<Profesional>();
+        static List<Profesional> profesionalesAll = new List<Profesional>();
+        static List<Profesional> profesionalesFilter = new List<Profesional>();
         static List<IGrouping<string, Profesional>> profesionalesAgrupados = new List<IGrouping<string, Profesional>>();
 
         static void Main(string[] args)
         {
-            init();
-
-            // Obtengo todos los profesionales
-            string profesionalesJson = GetProfesionalesJsonFromFile();
-            string profesionalesBase64 = Seguridad.Encriptar(profesionalesJson);
-            string profesionalesString = Seguridad.DesEncriptar(profesionalesBase64);
-
-            //string profesionalesTxt = GetProfesionalesTxtFromFile();
-            //string profesionalesBase64 = Seguridad.Encriptar(profesionalesTxt);
-            //string profesionalesString = Seguridad.DesEncriptar(profesionalesTxt);
-
-            profesionalesAll = DeserializeJson(profesionalesString);
+            Init();
 
             // Filtro por sede
             profesionalesAgrupados = profesionalesAll
-                        .AsEnumerable()
-                        .Where(x => x.sede == sede)
+                        .Where(x => x.sede == parameter.Sede)
                         .OrderBy(d => d.especialidad)
                         .ThenBy(x => x.nombre)
                         .GroupBy(d => d.especialidad)
@@ -58,35 +42,21 @@ namespace consolePdf
 
             profesionalesFilter = profesionalesAgrupados.SelectMany(group => group).ToList();
 
+            pathPDF = parameter.Pdf.NameJunta;
             ValidacionArchivos(pathPDF, msg1, complemento);
-            sign = new Firma();
-            sign.Sign = new String[4];
+
+            sign = new Firma
+            {
+                Sign = new String[4]
+            };
 
             //Validaciones();
             showMenuMiddle();
         }
 
-        static void init(){
-            IConfigurationBuilder builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appSettings.json", true,true);
-
-            IConfigurationRoot config = builder.Build();
-            appName = config["ConnectionString"];
-            SedeDescription = config["SedeDescription"];
-            //_pathProfesionales = config["_pathProfesionales"];
-
-            //Sede
-            sede = config["Sede"];
-
-            //var profesionales = config.GetValue<>("Profesionales");
-            IConfigurationSection pdf = config.GetSection(nameof(Pdf));
-
-            GetUrlApiRestWebConfig = ConfigurationManager.AppSettings["MySetting"];
-
-            //rutas de nuestros pdf
-            pathPDF = @Path.GetFullPath(pdf["nameJunta"]);
-            pathPDF2 = @Path.GetFullPath(pdf["nameJuntaFirmada"]);
+        static void Init(){
+            profesionalesAll = GetProfesionaleAll();
+            parameter = GetParameters(); 
         }
 
         static void Validaciones(){
@@ -105,18 +75,19 @@ namespace consolePdf
             {
                  string opcion = showMenu();
                 //string opcion = "3";
-                Console.WriteLine("La opcion seleccionada es: ", opcion);
+                Console.WriteLine("La opcion seleccionada es: {0}", opcion);
 
                 // Evalua que exista la plantilla PDF
 
-                CTextSharp cTextSharp = new CTextSharp(pathPDF, pathPDF2);
+                CTextSharp cTextSharp = new(pathPDF, parameter);
                 resp = cTextSharp.Firmar(profesionalSeleccionado);
                 if(resp){
                     showMenuMiddle();
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                Console.WriteLine("Se ha presentado un error: {0}", e.Message);
                 showMenuMiddle();
             }
             return resp;
@@ -169,6 +140,7 @@ namespace consolePdf
                 }
 
                 int profesionalSeleccionadoValidar = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).Count();
+
                 if (profesionalSeleccionadoValidar==0)
                 {
                     Console.WriteLine("      Seleccione un id valido por favor...");
@@ -297,33 +269,39 @@ namespace consolePdf
             return JsonConvert.DeserializeObject<List<Profesional>>(json);
         }
         #endregion
+    
+        /// <summary>
+        /// Obtenemos listado de todos los profesionales
+        /// </summary>
+        /// <returns>Objeto</returns>
+        static List<Profesional> GetProfesionaleAll()
+        {
+            string fileName = "json/profesionales.json";
+            string path = @Path.GetFullPath(fileName);
+            string jsonString = string.Empty;
+            using (StreamReader r = new(path))
+            {
+                jsonString = r.ReadToEnd();
+            }          
+            return JsonConvert.DeserializeObject<List<Profesional>>(jsonString);
+        }
+
+        static Parameter GetParameters()
+        {
+            string fileName2 = "appSettings.json";
+            string path2 = @Path.GetFullPath(fileName2);
+            string pathPDF = string.Empty;
+            using (StreamReader r2 = new(path2))
+            {
+                pathPDF = r2.ReadToEnd();
+            }            
+            return JsonConvert.DeserializeObject<Parameter>(pathPDF);
+        }
     }
 }
 
-public class Pdf{
-    public string nameJunta { get; set; }
-    public string nameJuntaFirmada { get; set; }
-}
-
-public class DimensionesImagenes{
-    public int sWidth { get; set; }
-    public int sHeight { get; set; }
-    public int xAbsolutePosition { get; set; }
-}
 
 public class Firma{
     public string[] Sign { get; set; }
-    public int SignWidth { get; set; }
-}
-
-public class Profesional{
-    public int id { get; set; }
-    public string nombre { get; set; }
-    public int xposition { get; set; }
-    public int yposition { get; set; }
-    public string especialidad { get; set; }
-    public string sede { get; set; }
-    public string sign {get; set;}
-    public string signPath { get; set; }
     public int SignWidth { get; set; }
 }

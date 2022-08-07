@@ -1,6 +1,7 @@
 
 using Microsoft.Extensions.Configuration;
 using System.IO;
+
 public static class VariablesGlobales{
 
   public static string complemento = "junta.pdf";
@@ -14,10 +15,6 @@ public static class VariablesGlobales{
                 .AddJsonFile("appSettings.json", true,true);
 
   IConfigurationRoot config = builder.Build();
-  string appName = config["ConnectionString"];
-  IConfigurationSection pdf = config.GetSection(nameof(Pdf));
-  IConfigurationSection dimensionesImagenes = config.GetSection(nameof(DimensionesImagenes));
-
-   
+  string appName = config["ConnectionString"];   
  }
 }

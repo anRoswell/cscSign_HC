@@ -1,10 +1,9 @@
 using System;
 using System.IO;
-using System.Configuration;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+using consolePdf.model;
 
 public class CTextSharp{
     //Objeto para leer el pdf original
@@ -17,77 +16,65 @@ public class CTextSharp{
     // Declaramos variables globales
     int sWidth;
     int sHeight;
-    string GetUrlApiRestWebConfig = string.Empty;
 
-    //rutas de nuestros pdf
+    // rutas de nuestros pdf
     string pathPDF = string.Empty;
     string pathPDF2 = string.Empty;
 
-    string dirPruebas = string.Empty;
-    string ficPruebas = string.Empty;
+    public CTextSharp(string pathPDF, Parameter parameters){
+        this.pathPDF = parameters.Pdf.NameJunta;
+        this.pathPDF2 = parameters.Pdf.NameJunta2;
 
-    public CTextSharp(string pathPDF, string pathPDF2){
-        this.pathPDF = pathPDF;
-        this.pathPDF2 = pathPDF2;
-
-        IConfigurationBuilder builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appSettings.json", true,true);
-
-        IConfigurationRoot config = builder.Build();
-        string appName = config["ConnectionString"];
-        IConfigurationSection pdf = config.GetSection(nameof(Pdf));
-        IConfigurationSection dimensionesImagenes = config.GetSection(nameof(DimensionesImagenes));
+        DimensionesImagenes dimensionesImagenes = parameters.DimensionesImagenes;
 
         // Dimensiones imágenes
-        this.sWidth = Convert.ToInt32(dimensionesImagenes["sWidth"]);
-        this.sHeight = Convert.ToInt32(dimensionesImagenes["sHeight"]);
-
-        string GetUrlApiRestWebConfig = ConfigurationManager.AppSettings["MySetting"];
-
-        string dirPruebas = @"E:\Pruebas3\RSA cripto";
-        string ficPruebas = Path.Combine(dirPruebas, "MisClaves_CS.xml");
+        this.sWidth = dimensionesImagenes.SWidth;
+        this.sHeight = dimensionesImagenes.SHeight;
     }
-    
 
     public bool Firmar(Profesional profesionales){
-        //Objeto para leer el pdf original
-        oReader = new PdfReader(this.pathPDF);
-
-        //Objeto que tiene el tamaño de nuestro documento
-        oSize = oReader.GetPageSizeWithRotation(1);
-
-        //documento de itextsharp para realizar el trabajo asignandole el tamaño del original
-        oDocument = new Document(oSize);
-
         try
         {
-            FileStream oFS = new FileStream(this.pathPDF2, FileMode.Create, FileAccess.Write);
-            PdfWriter oWriter = PdfWriter.GetInstance(oDocument, oFS);
-            oDocument.Open();
+            //var reader = new iTextSharp.text.pdf.PdfReader(this.pathPDF);
+            using (FileStream oFS = new(this.pathPDF2, FileMode.Create, FileAccess.Write))
+            {
+                //Objeto para leer el pdf original
+                oReader = new PdfReader(this.pathPDF);
 
-            // Creamos la imagen y le ajustamos el tamaño
-            iTextSharp.text.Image imagen1 = CreateImagenToPdf(profesionales.sign, profesionales.xposition, profesionales.yposition);
+                //Objeto que tiene el tamaño de nuestro documento
+                oSize = oReader.GetPageSizeWithRotation(1);
 
-            //El contenido del pdf, aqui se hace la escritura del contenido
-            PdfContentByte oPDF = oWriter.DirectContent;
+                //documento de itextsharp para realizar el trabajo asignandole el tamaño del original
+                oDocument = new Document(oSize);
 
-            //Se abre el flujo para escribir el texto
-            oPDF.BeginText();
-            oPDF.EndText();
+                //FileStream oFS = new FileStream(this.pathPDF2, FileMode.Create, FileAccess.Write);
+                PdfWriter oWriter = PdfWriter.GetInstance(oDocument, oFS);
+                oDocument.Open();
 
-            //crea una nueva pagina y agrega el pdf original
-            PdfImportedPage page = oWriter.GetImportedPage(oReader, 1);
-            oPDF.AddTemplate(page, 0, 0);
+                // Creamos la imagen y le ajustamos el tamaño
+                Image imagen1 = CreateImagenToPdf(profesionales.sign, profesionales.xposition, profesionales.yposition);
 
-            // Cerramos los objetos utilizados
-            oDocument.Add(imagen1);
+                //El contenido del pdf, aqui se hace la escritura del contenido
+                PdfContentByte oPDF = oWriter.DirectContent;
 
-            oDocument.Close();
+                //Se abre el flujo para escribir el texto
+                oPDF.BeginText();
+                oPDF.EndText();
 
-            oFS.Close();
-            oWriter.Close();
-            oReader.Close();
+                //crea una nueva pagina y agrega el pdf original
+                PdfImportedPage page = oWriter.GetImportedPage(oReader, 1);
+                oPDF.AddTemplate(page, 0, 0);
+
+                // Cerramos los objetos utilizados
+                oDocument.Add(imagen1);
+
+                oDocument.Close();
+
+                oFS.Close();
+                oWriter.Close();
+                oReader.Close();
+            }
+            
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             
             Console.WriteLine("                               *** Firmado satisfactoriamente !!!!! ***");
@@ -116,9 +103,9 @@ public class CTextSharp{
         }
     }
 
-    private iTextSharp.text.Image CreateImagenToPdf(string firma, int xAbsolutePosition, int yAbsolutePosition, int BorderWidth = 0){
+    private Image CreateImagenToPdf(string firma, int xAbsolutePosition, int yAbsolutePosition, int BorderWidth = 0){
         // Creamos la imagen y le ajustamos el tamaño
-        iTextSharp.text.Image imagen = iTextSharp.text.Image.GetInstance(firma);
+        Image imagen = Image.GetInstance(firma);
         imagen.BorderWidth = BorderWidth;
         imagen.SetAbsolutePosition(xAbsolutePosition, yAbsolutePosition);
         imagen.ScaleAbsoluteWidth(sWidth);
