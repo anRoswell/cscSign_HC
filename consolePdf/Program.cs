@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using consolePdf.model;
+using consolePdf.Clases;
+using System.Threading.Tasks;
+using consolePdf.DTO;
 
 namespace consolePdf
 {
@@ -16,6 +19,7 @@ namespace consolePdf
         static string msg1 = "ERROR!!! No existe archivo ";
         static string msg2 = "ERROR!!! No existe firma ";
         static string complemento = "junta.pdf";
+        static Root profesionalesApi;
         static Firma sign;
         static string[] signPath = new String[6];
         static string pathPDF = string.Empty;
@@ -24,38 +28,59 @@ namespace consolePdf
         static string _pathProfesionalesTxt = "json\\profesionales.txt";
         static Parameter parameter = new Parameter ();
         static Profesional profesionalSeleccionado = new Profesional();
+        static Body profSeleccionado = new Body();
         static List<Profesional> profesionalesAll = new List<Profesional>();
         static List<Profesional> profesionalesFilter = new List<Profesional>();
+        static List<Body> profFilter = new List<Body>();
         static List<IGrouping<string, Profesional>> profesionalesAgrupados = new List<IGrouping<string, Profesional>>();
+        static List<IGrouping<string, Body>> profAgr = new List<IGrouping<string, Body>>();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Init();
+            try
+            {
+                await InitAsync();
 
-            // Filtro por sede
-            profesionalesAgrupados = profesionalesAll
-                        .Where(x => x.sede == parameter.Sede)
-                        .OrderBy(d => d.especialidad)
-                        .ThenBy(x => x.nombre)
-                        .GroupBy(d => d.especialidad)
+
+                // Filtro por sede
+                //profesionalesAgrupados = profesionales
+                //            .Where(x => x.sede == parameter.Sede)
+                //            .OrderBy(d => d.especialidad)
+                //            .ThenBy(x => x.nombre)
+                //            .GroupBy(d => d.especialidad)
+                //            .ToList();
+
+                // Filtro por sede
+                profAgr = profesionalesApi.body
+                        .Where(x => x.idSede == parameter.SedeId)
+                        .OrderBy(d => d.idProfesion)
+                        .ThenBy(x => x.Nombre)
+                        .GroupBy(d => d.Profesion)
                         .ToList();
 
-            profesionalesFilter = profesionalesAgrupados.SelectMany(group => group).ToList();
+                //profesionalesFilter = profesionalesAgrupados.SelectMany(group => group).ToList();
+                profFilter = profAgr.SelectMany(group => group).ToList();
 
-            pathPDF = parameter.Pdf.NameJunta;
-            ValidacionArchivos(pathPDF, msg1, complemento);
+                pathPDF = parameter.Pdf.NameJunta;
+                ValidacionArchivos(pathPDF, msg1, complemento);
 
-            sign = new Firma
+                sign = new Firma
+                {
+                    Sign = new String[4]
+                };
+
+                //Validaciones();
+                showMenuMiddle();
+            }
+            catch (Exception e)
             {
-                Sign = new String[4]
-            };
-
-            //Validaciones();
-            showMenuMiddle();
+                Console.WriteLine(e.Message);
+            }            
         }
 
-        static void Init(){
-            profesionalesAll = GetProfesionaleAll();
+        static async Task InitAsync(){
+            //profesionalesAll = GetProfesionaleAll();
+            profesionalesApi = await GetProfesionalsApiAsync();
             parameter = GetParameters(); 
         }
 
@@ -80,7 +105,8 @@ namespace consolePdf
                 // Evalua que exista la plantilla PDF
 
                 CTextSharp cTextSharp = new(pathPDF, parameter);
-                resp = cTextSharp.Firmar(profesionalSeleccionado);
+                //resp = cTextSharp.Firmar(profSeleccionado);
+                resp = cTextSharp.Firmar(profSeleccionado);
                 if(resp){
                     showMenuMiddle();
                 }
@@ -94,6 +120,7 @@ namespace consolePdf
         }
 
         static string showMenu(){
+            SedeDescription = parameter.SedeDescription;
             Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("");
@@ -109,7 +136,7 @@ namespace consolePdf
             Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
             Console.WriteLine("                    │    OPCIONES    │  │  FIRMA PROFESIONALES REGIONAL CSC    │");
             Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
-            foreach (var profresionalesEspecialidad in profesionalesAgrupados)
+            foreach (var profresionalesEspecialidad in profAgr)
             {
                 Console.WriteLine("                    ┌────────────────┐  ┌──────────────────────────────────────┐");
                 Console.WriteLine("                    ├  ESPECIALIDAD  ┤  ├  {0}                       ┤", profresionalesEspecialidad.Key);
@@ -119,7 +146,7 @@ namespace consolePdf
 
                 foreach (var item in profresionalesEspecialidad)
                 {
-                    Console.WriteLine("                    │  {0}]           │  │ {1}                        │", item.id, item.nombre);
+                    Console.WriteLine("                    │  {0}]           │  │ {1}                        │", item.id, item.Nombre);
                 }
                 Console.WriteLine("                    └────────────────┘  └──────────────────────────────────────┘");
             }
@@ -139,7 +166,7 @@ namespace consolePdf
                     Environment.Exit(1);
                 }
 
-                int profesionalSeleccionadoValidar = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).Count();
+                int profesionalSeleccionadoValidar = profFilter.Where(x => x.id == Convert.ToInt32(opcion)).Count();
 
                 if (profesionalSeleccionadoValidar==0)
                 {
@@ -148,8 +175,9 @@ namespace consolePdf
                 }
                 else
                 {
-                    profesionalSeleccionado = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).First();
-                    profesionalSeleccionado.signPath = @Path.GetFullPath(profesionalSeleccionado.sign);
+                    //profesionalSeleccionado = profesionalesFilter.Where(x => x.id == Convert.ToInt32(opcion)).First();
+                    profSeleccionado = profFilter.Where(x => x.id == Convert.ToInt32(opcion)).First();
+                    //profesionalSeleccionado.signPath = @Path.GetFullPath(profesionalSeleccionado.sign);
                     sw = 1;
                 }
             }
@@ -284,6 +312,12 @@ namespace consolePdf
                 jsonString = r.ReadToEnd();
             }          
             return JsonConvert.DeserializeObject<List<Profesional>>(jsonString);
+        }
+
+        static async Task<Root> GetProfesionalsApiAsync()
+        {
+            Root profesionales = await HttpHelper.Get<Root>("profesionales", parameter.SedeId);
+            return profesionales;
         }
 
         static Parameter GetParameters()

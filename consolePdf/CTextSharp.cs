@@ -4,6 +4,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Extensions.Configuration;
 using consolePdf.model;
+using consolePdf.DTO;
 
 public class CTextSharp{
     //Objeto para leer el pdf original
@@ -32,7 +33,7 @@ public class CTextSharp{
         this.sHeight = dimensionesImagenes.SHeight;
     }
 
-    public bool Firmar(Profesional profesionales){
+    public bool Firmar(Body profesionales){
         try
         {
             //var reader = new iTextSharp.text.pdf.PdfReader(this.pathPDF);
@@ -52,7 +53,8 @@ public class CTextSharp{
                 oDocument.Open();
 
                 // Creamos la imagen y le ajustamos el tamaño
-                Image imagen1 = CreateImagenToPdf(profesionales.sign, profesionales.xposition, profesionales.yposition);
+                //Image imagen1 = CreateImagenToPdf(profesionales.sign, profesionales.xposition, profesionales.yposition);
+                Image imagen1 = CreateImagenToPdf(profesionales.rutaAbsoluta, profesionales.xposition, profesionales.yposition);
 
                 //El contenido del pdf, aqui se hace la escritura del contenido
                 PdfContentByte oPDF = oWriter.DirectContent;

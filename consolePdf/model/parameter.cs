@@ -12,8 +12,10 @@ namespace consolePdf.model
         public Smtp Smtp { get; set; }
         public Pdf Pdf { get; set; }
         public string Sede { get; set; }
+        public int SedeId { get; set; }
         public string SedeDescription { get; set; }
         public DimensionesImagenes DimensionesImagenes { get; set; }
+        public string apiBasicUri { get; set; }
     }
 
     public class DimensionesImagenes

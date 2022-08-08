@@ -17,6 +17,7 @@
     "nameJuntaFirmada": "MIPRESFirmado.pdf"
   },
   "Sede": "bolivarNorteCartagena",
+  "SedeId": 1,
   "SedeDescription": "Bolivar Norte Cartagena",
   "DimensionesImagenes": {
     "sWidth": 60,
